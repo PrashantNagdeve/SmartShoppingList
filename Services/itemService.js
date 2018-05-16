@@ -56,23 +56,25 @@ function addItems(req){
                        newEntry.save((err)=>{
                             if(err)
                                 console.log("Item insertion failed");
+                            else console.log("Entries are added for the first time");
                        });
                     }
                 else
                 {
                     
                    //if result has entry for an user 
-                  
+                  var all_items_in_db=new Set();
 
                     var updateItem=result[0];
-                    console.log("Before :"+result[0].items[0].purchase_date);
-                    for(var i=0;i<arrayOfItems.length;i++)
+                  //  console.log("Before :"+result[0].items[0].purchase_date);
+
+                   for(var i=0;i<arrayOfItems.length;i++)
                     {
                         //to handle new items in request
                         var flag=false;
                         for(var j=0;j<result[0].items.length;j++)
                         {
-
+                            all_items_in_db.add(result[0].items[j].name);
 
                             //this adds the item only when it is already present in list of users,
                             //this does not work when user adds new items in the list along with other present itmes
@@ -90,39 +92,61 @@ function addItems(req){
                                 var prevDate=new Date(purchaseArray[purchaseArray.length-1]);
                                 var currDate=new Date(arrayOfItems[i].purchase_date);
                                 var diff=findDaysBetweenDates(prevDate,currDate);
-                                console.log("Difference between days:"+diff);
+                               // console.log("Difference between days:"+diff);
                                 if(diff!=0)
                                 {
                                     var formatedDate=new Date(arrayOfItems[i].purchase_date)
                                     updateItem.items[j].purchase_date.push(formatedDate);
                                     updateItem.items[j].diff_days_purchase.push(diff);
                                 }
-                                console.log("This is new :"+updateItem.items);
+                              //  console.log("This is new :"+updateItem.items);
                             }
                         }
                         
                       
                     }
-                    console.log("------------After updates--------------");
-                    console.log(updateItem.items);
-                    var newItem=new Item();
-                    newItem.email=updateItem.email;
-                    newItem.items=updateItem.items;
+                   // console.log("------------After updates--------------");
+                   // console.log(updateItem.items);
+                    
+
+                  //adding all items which are not in db
+                  for(var  k=0;k<arrayOfItems.length;k++)
+                  {
+                        if(all_items_in_db.has(arrayOfItems[k].name)==false)
+                        {
+                           // console.log(arrayOfItems[k].name);
+                            var itemTemp={
+                                "name":arrayOfItems[k].name,
+                                "purchase_date":[arrayOfItems[k].purchase_date],
+                                "diff_days_purchase":[7]
+                                   }
+
+                            updateItem.items.push(itemTemp);
+                        }
+                  }
+
+                 
+                  var newItem=new Item();
+                  newItem.email=updateItem.email;
+                  newItem.items=updateItem.items;
 
 
-                   Item.update(query,{items:newItem.items},(err)=>{
-                        if(err)
-                          console.log("Failed to update item in Item Service-106");
-                   });
+                 Item.update(query,{items:newItem.items},(err)=>{
+                      if(err)
+                        console.log("Failed to update item in Item Service-106");
+                 });
+
 
                 }
                 
               });
-
+            //this is the end of query and we have search result
+           // console.log("Search Result")
             
         }
 
     });
+    console.log("Insert request processed");
 }
 function findDaysBetweenDates( date1, date2 ) {
     console.log(date1);
