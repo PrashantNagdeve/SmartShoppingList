@@ -18,14 +18,18 @@ app.listen(port,function(){
 
 
 //default method
-app.get('/',function(req,res){
-    res.send("This is the first app");
-});
 
 var userservices=require('./Services/userService');
+var itemservices=require('./Services/itemService');
 
 app.post('/user/addUser',(req,res)=>{
     userservices.addUser(req);
+    
+    res.send("success");
+});
+
+app.post('/user/addItems',(req,res)=>{
+    itemservices.addItems(req);
     
     res.send("success");
 });

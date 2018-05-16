@@ -10,7 +10,7 @@ function addUser(req)
         lastName:req.body.lastName,
         password:req.body.password
     });
-    console.log(newUser);
+    //console.log(newUser);
     newUser.save((err)=>{
         if(err)
             console.log("Error is");

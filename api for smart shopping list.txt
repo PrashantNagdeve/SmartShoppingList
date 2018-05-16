@@ -1,0 +1,23 @@
+add item jason
+localhost:4000/user/addItems
+{"email":"pn4333@gmail.com",
+ "data":
+    [
+      {"name":"milk",
+      	"purchase_date":"5/15/2018"
+      } ,	
+ 	
+ 	  {"name":"chees",
+      	"purchase_date":"5/15/2018"
+      },
+	  {
+      	"name":"eggs",
+      	"purchase_date":"6/1/2018"
+      },
+      {
+      	"name":"fruits",
+      	"purchase_date":"6/1/2018"
+      }
+ 	]	
+	
+}
